@@ -2,7 +2,7 @@ import re
 
 class Origami:
     def __init__(self, file):
-        lines = open(file).read()
+        lines = open('13/'+file).read()
         
         dots = re.findall(r'(\d+),(\d+)', lines)
         self.dots = set((int(x),int(y)) for x,y in dots)
