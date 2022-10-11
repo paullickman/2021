@@ -49,4 +49,3 @@ assert s.count == 112
 s = Shot('input.txt')
 print(s.highest())
 print(s.count)
-# 1952 too low

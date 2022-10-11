@@ -1,7 +1,5 @@
 import copy
 import collections
-import heapq
-from re import X
 
 # Energy used moving
 score = {'A':1, 'B':10, 'C':100, 'D':1000}

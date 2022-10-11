@@ -28,19 +28,13 @@ def contained(p, c):
     return p.x >= c.minX and p.x <= c.maxX and p.y >= c.minY and p.y <= c.maxY and p.z >= c.minZ and p.z <= c.maxZ
 
 # Calculates the points of a steps' vertices
-# def vertices(s):
-#     v = []
-#     for x in [s.minX, s.maxX]:
-#         for y in [s.minY, s.maxY]:
-#             for z in [s.minZ, s.maxZ]:
-#                 v.append(Point(x,y,z))
-#     return v
-
 def vertices(s):
+    v = []
     for x in [s.minX, s.maxX]:
         for y in [s.minY, s.maxY]:
             for z in [s.minZ, s.maxZ]:
-                yield Point(x,y,z)
+                v.append(Point(x,y,z))
+    return v
 
 # Determine how a 1d line can be chunked up by intersection
 def regions(x,y, u,v):
@@ -63,21 +57,14 @@ class Reactor():
     def process(self, step):
         # Want to add parts of each cuboid which don't overlap with step
         # Construct 3x3x3 mega cuboid and test each sub-cuboid
-
-
         newCuboids = []
         for c in self.cuboids:
-
-            # PRL Idea: only do this if step does overlap with the cuboid
-
-            # if (any(contained(p,c) for p in vertices(step))):
-
             for x1,x2 in regions(c.minX, c.maxX, step.minX, step.maxX):
                 for y1,y2 in regions(c.minY, c.maxY, step.minY, step.maxY):
                     for z1,z2 in regions(c.minZ, c.maxZ, step.minZ, step.maxZ):
                         subCuboid = Cuboid(x1, x2, y1, y2, z1, z2)
-                        # Check that subCuboid is wholly outside of step
-                        if not(any(contained(p,step) for p in vertices(subCuboid))):
+                        # Check that subCuboid is wholly within cuboid and wholly outside of step
+                        if all([contained(p,c) for p in vertices(subCuboid)]) and not(any([contained(p,step) for p in vertices(subCuboid)])):
                             newCuboids.append(subCuboid)
         self.cuboids = newCuboids
 
